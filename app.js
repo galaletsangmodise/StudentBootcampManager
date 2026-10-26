@@ -24,3 +24,20 @@ function createCounter() {
   return { increment: () => ++count, value: () => count };
 }
 const processedCounter = createCounter();
+
+//  Storage 
+const students = [];
+const isValidMark = (m) => typeof m === "number" && m >= 0 && m <= 100;
+
+
+function registerStudent(name, course = "General Programming", ...marks) {
+  if (typeof name !== "string" || !name.trim()) {
+    console.log("  ⚠ Invalid name, student not registered.");
+    return null;
+  }
+  const validMarks = marks.filter(isValidMark);
+  if (validMarks.length !== marks.length) console.log(`  Invalid marks ignored for ${name}.`);
+  const student = { id: ids.next().value, name, course, marks: [...validMarks], processed: false };
+  students.push(student);
+  return student;
+}
