@@ -85,3 +85,18 @@ function processAll(list, done) {
     processAll(rest, done);
   });
 }
+
+//  Final report 
+function printReport() {
+  reporter.printHeader.call(reporter); // call(): run with a chosen this
+  console.table(
+    students.map((s) => {
+      const avg = calculateAverage(s.marks);
+      return { ID: s.id, Name: s.name, Course: s.course, Marks: s.marks.join(", ") || "-", Average: avg ?? "-", Status: getStatus(avg) };
+    })
+  );
+   console.log(`Total students:     ${students.length}`);
+   console.log(`Students processed: ${processedCounter.value()}`);
+   console.log(`Passed:             ${countWhere(students, isPassing)}`);
+   console.log(`Failed:             ${countWhere(students, (s) => getStatus(calculateAverage(s.marks)) === "FAIL")}`);
+}
