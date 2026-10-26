@@ -100,3 +100,28 @@ function printReport() {
    console.log(`Passed:             ${countWhere(students, isPassing)}`);
    console.log(`Failed:             ${countWhere(students, (s) => getStatus(calculateAverage(s.marks)) === "FAIL")}`);
 }
+
+
+console.log("--- Registering students ---");
+registerStudent("Lerato", "Web Development", 75, 82, 90); // pass, multiple marks
+registerStudent("Thabo", undefined, 40, 35);               // default course, fail
+registerStudent("Naledi", "Data Analysis", 68);            // one mark
+registerStudent("Sipho", "Web Development");               // no marks
+registerStudent("Amanda", "AI Fundamentals", 55, "abc", 120, 60); // invalid marks ignored
+registerStudent("Kabelo", "Data Analysis", 49, 51);
+registerStudent(123, "Web Development", 70);               // wrong data type
+
+// apply(): marks passed as an array (call() takes them one by one)
+const best = students[0];
+console.log(`Best mark for ${best.name}:`, Math.max.apply(null, best.marks));
+console.log(describe.call(students[1], config.get("passMark")));
+
+// bind(): fixes this, runs later (without bind, this would be lost inside setTimeout)
+const printHeaderLater = reporter.printHeader.bind(reporter);
+setTimeout(printHeaderLater, 0);
+
+console.log("\n--- Processing (async) ---");
+processStudent("STU-999", (err) => console.log(`  ✖ ${err.message}`)); // edge: does not exist
+processStudent(42, (err) => console.log(`  ✖ ${err.message}`));       // edge: invalid data
+processAll(students, printReport);
+console.log("This line prints BEFORE the processing results (JS keeps running while waiting).");
