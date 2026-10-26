@@ -41,3 +41,26 @@ function registerStudent(name, course = "General Programming", ...marks) {
   students.push(student);
   return student;
 }
+
+// Performance 
+const calculateAverage = (marks) =>
+  marks.length ? Math.round((marks.reduce((sum, m) => sum + m, 0) / marks.length) * 10) / 10 : null;
+
+const getStatus = (average, passMark = config.get("passMark")) =>
+  average === null ? "N/A" : average >= passMark ? "PASS" : "FAIL";
+
+const isPassing = (s) => getStatus(calculateAverage(s.marks)) === "PASS";
+const countWhere = (list, predicate) => list.filter(predicate).length; 
+
+//  this, call, apply, bind 
+const reporter = {
+  title: `${config.get("bootcamp")} v${config.get("version")}`,
+  printHeader() {
+    console.log(`\n=== ${this.title} ===`); 
+  },
+};
+
+function describe(passMark) {
+  // this is set by call()
+  return `${this.name} (${this.course}): avg ${calculateAverage(this.marks)} -> ${getStatus(calculateAverage(this.marks), passMark)}`;
+}
