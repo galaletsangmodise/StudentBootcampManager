@@ -64,3 +64,24 @@ function describe(passMark) {
   // this is set by call()
   return `${this.name} (${this.course}): avg ${calculateAverage(this.marks)} -> ${getStatus(calculateAverage(this.marks), passMark)}`;
 }
+
+// Async processing with callback
+function processStudent(id, callback) {
+  const student = typeof id === "string" ? students.find((s) => s.id === id) : undefined;
+  if (!student) return callback(new Error(`Cannot process "${id}": student not found or invalid data`));
+  console.log(`  Processing ${student.name}...`);
+  setTimeout(() => {
+    student.processed = true;
+    processedCounter.increment();
+    callback(null, student); // callback decides what happens next
+  }, 500);
+}
+
+function processAll(list, done) {
+  const [first, ...rest] = list;
+  if (!first) return done();
+  processStudent(first.id, (err, s) => {
+    console.log(err ? `  ${err.message}` : `  ${s.name} processed`);
+    processAll(rest, done);
+  });
+}
